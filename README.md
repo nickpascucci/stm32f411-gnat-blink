@@ -7,6 +7,10 @@ Ada.
 Building
 --------
 
+You will need to have a Ravenscar profile built for the STM32F411
+in order to build this demo. I recommend the one here:
+https://github.com/nickpascucci/ravenscar-sfp-stm32f411-nucleo
+
 To compile the example, run ```gprbuild -p -P firmware.gpr```. This will
 create =build= and =bin= directories, and put a compiled ELF binary in
 bin/demo.
