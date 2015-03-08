@@ -26,7 +26,7 @@
 ------------------------------------------------------------------------------
 
 with LEDs;          use LEDs;
-with Button;        use Button;
+-- with Button;        use Button;
 with Ada.Real_Time; use Ada.Real_Time;
 
 package body Driver is
@@ -43,17 +43,24 @@ package body Driver is
       Period     : constant Time_Span := Milliseconds (75);  -- arbitrary
       Next_Start : Time := Clock;
       Next_LED   : Index := 0;
+      Light_On   : Boolean := False;
    begin
       loop
-         Off (Pattern (Next_LED));
-
-         if Button.Current_Direction = Counterclockwise then
-            Next_LED := Next_LED - 1;
+         if Light_On then
+            Off (Pattern (Next_LED));
+            Light_On := False;
          else
-            Next_LED := Next_LED + 1;
+            On (Pattern (Next_LED));
+            Light_On := True;
          end if;
 
-         On (Pattern (Next_LED));
+         --  if Button.Current_Direction = Counterclockwise then
+         --     Next_LED := Next_LED - 1;
+         --  else
+         --     Next_LED := Next_LED + 1;
+         --  end if;
+
+         --  On (Pattern (Next_LED));
 
          Next_Start := Next_Start + Period;
          delay until Next_Start;

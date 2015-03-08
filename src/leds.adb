@@ -27,9 +27,6 @@
 
 with Ada.Unchecked_Conversion;
 
-with Registers;     use Registers;
-with STM32F4.GPIO;  use STM32F4.GPIO;
-
 package body LEDs is
 
 
@@ -39,13 +36,13 @@ package body LEDs is
 
    procedure On (This : User_LED) is
    begin
-      GPIOD.BSRR := As_Word (This);
+      GPIOA.BSRR := As_Word (This);
    end On;
 
 
    procedure Off (This : User_LED) is
    begin
-      GPIOD.BSRR := Shift_Left (As_Word (This), 16);
+      GPIOA.BSRR := Shift_Left (As_Word (This), 16);
    end Off;
 
 
@@ -61,27 +58,27 @@ package body LEDs is
 
    procedure All_Off is
    begin
-      GPIOD.BSRR := All_LEDs_Off;
+      GPIOA.BSRR := All_LEDs_Off;
    end All_Off;
 
 
    procedure All_On is
    begin
-      GPIOD.BSRR := All_LEDs_On;
+      GPIOA.BSRR := All_LEDs_On;
    end All_On;
 
 
    procedure Initialize is
-      RCC_AHB1ENR_GPIOD : constant Word := 16#08#;
+      RCC_AHB1ENR_GPIOA : constant Word := 16#08#;
    begin
       --  Enable clock for GPIO-D
-      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOD;
+      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOA;
 
       --  Configure PD12-15
-      GPIOD.MODER   (12 .. 15) := (others => Mode_OUT);
-      GPIOD.OTYPER  (12 .. 15) := (others => Type_PP);
-      GPIOD.OSPEEDR (12 .. 15) := (others => Speed_100MHz);
-      GPIOD.PUPDR   (12 .. 15) := (others => No_Pull);
+      GPIOA.MODER   (12 .. 15) := (others => GPIO.Mode_OUT);
+      GPIOA.OTYPER  (12 .. 15) := (others => GPIO.Type_PP);
+      GPIOA.OSPEEDR (12 .. 15) := (others => GPIO.Speed_100MHz);
+      GPIOA.PUPDR   (12 .. 15) := (others => GPIO.No_Pull);
    end Initialize;
 
 
