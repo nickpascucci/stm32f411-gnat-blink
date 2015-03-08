@@ -7,7 +7,7 @@ Ada.
 Building
 --------
 
-To compile the example, run =gprbuild -p -P firmware.gpr=. This will
+To compile the example, run ```gprbuild -p -P firmware.gpr```. This will
 create =build= and =bin= directories, and put a compiled ELF binary in
 bin/demo.
 
