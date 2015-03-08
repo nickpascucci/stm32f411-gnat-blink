@@ -36,10 +36,7 @@ package body Last_Chance_Handler is
    procedure Last_Chance_Handler (Msg : System.Address; Line : Integer) is
       pragma Unreferenced (Msg, Line);
    begin
-      Off (Green);
-      Off (Orange);
-      Off (Blue);
-      On (Red);
+      All_Off;
       --  No return procedure.
       pragma Warnings (Off, "*rewritten as loop");
       <<spin>> goto spin;   -- yes, a goto!

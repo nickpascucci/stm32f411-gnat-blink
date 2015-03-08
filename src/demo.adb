@@ -39,10 +39,12 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  must be somewhere in the closure of the context clauses.
 
 with System;
+with LEDs; use LEDs;
 
 procedure Demo is
    pragma Priority (System.Priority'First);
 begin
+   All_On;
    loop
       null;
    end loop;
