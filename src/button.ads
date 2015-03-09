@@ -25,40 +25,14 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Unchecked_Conversion;
+--  This file provides declarations for the blue user button on the STM32F4
+--  Discovery board from ST Microelectronics.
 
-package body LEDs is
+package Button is
+   pragma Elaborate_Body;
 
-   All_LEDs_On  : constant Word := 2**5;
+   type Blink_Period is (Short, Medium, Long);
 
-   All_LEDs_Off : constant Word := Shift_Left (All_LEDs_On, 16);
+   function Blink_Speed return Blink_Period;
 
-   procedure All_Off is
-   begin
-      GPIOA.BSRR := All_LEDs_Off;
-   end All_Off;
-
-
-   procedure All_On is
-   begin
-      GPIOA.BSRR := GPIOA.BSRR or All_LEDs_On;
-   end All_On;
-
-
-   procedure Initialize is
-      RCC_AHB1ENR_GPIOA : constant Word := 2**0;
-   begin
-      --  Enable clock for GPIO-A
-      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOA;
-
-      --  Configure PA5
-      GPIOA.MODER   (5) := GPIO.Mode_OUT;
-      GPIOA.OTYPER  (5) := GPIO.Type_PP;
-      GPIOA.OSPEEDR (5) := GPIO.Speed_100MHz;
-      GPIOA.PUPDR   (5) := GPIO.No_Pull;
-   end Initialize;
-
-
-begin
-   Initialize;
-end LEDs;
+end Button;

@@ -26,26 +26,35 @@
 ------------------------------------------------------------------------------
 
 with LEDs;          use LEDs;
+with Button;        use Button;
 with Ada.Real_Time; use Ada.Real_Time;
 
 package body Driver is
 
+   function Delay_Period(Period : in Blink_Period) return Time_Span is
+   begin
+      case Period is
+         when Long => return Milliseconds(2500);
+         when Medium => return Milliseconds(1000);
+         when Short => return Milliseconds(500);
+      end case;
+   end Delay_Period;
+
    task body Controller is
-      Period     : constant Time_Span := Milliseconds (500);  -- arbitrary
       Next_Start : Time := Clock;
-      Leds_On : Boolean := False;
+      Light_On : Boolean := False;
    begin
       All_Off;
       loop
-         if Leds_On then
-            All_Off;
-            Leds_On := False;
-         else
+         if not Light_On then
             All_On;
-            Leds_On := True;
+            Light_On := True;
+         else
+            All_Off;
+            Light_On := False;
          end if;
 
-         Next_Start := Next_Start + Period;
+         Next_Start := Next_Start + Delay_Period(Button.Blink_Speed);
          delay until Next_Start;
       end loop;
    end Controller;
