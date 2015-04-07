@@ -27,6 +27,7 @@
 
 with LEDs;          use LEDs;
 with Button;        use Button;
+with Serial_Port;
 with Ada.Real_Time; use Ada.Real_Time;
 
 package body Driver is
@@ -40,7 +41,7 @@ package body Driver is
       end case;
    end Delay_Period;
 
-   task body Controller is
+   task body LED_Controller is
       Next_Start : Time := Clock;
       Light_On : Boolean := False;
    begin
@@ -54,9 +55,35 @@ package body Driver is
             Light_On := False;
          end if;
 
+         -- Note: Tasks having the same priority need yield control to each other or risk locking
+         --  each other out of the processor. Using a delay accomplishes this.
          Next_Start := Next_Start + Delay_Period(Button.Blink_Speed);
          delay until Next_Start;
       end loop;
-   end Controller;
+   end LED_Controller;
+
+   -- A task which echoes back any characters read on the serial port.
+   task body Serial_Controller is
+      Next_Check : Time := Clock;
+      Check_Interval : constant Time_Span := Milliseconds(100);
+      Line_Buffer : String(1..512);
+      Characters_Read : Natural := 0;
+   begin
+      Serial_Port.Enable(115_200);
+      Serial_Port.Write_Line("Serial online!");
+      loop
+         begin
+            Serial_Port.Read(Line_Buffer, Characters_Read);
+            if Characters_Read > 0 then
+               Serial_Port.Write(Line_Buffer(Line_Buffer'First..(Line_Buffer'First + Characters_Read)));
+            end if;
+            Next_Check := Next_Check + Check_Interval;
+            delay until Next_Check;
+         exception
+            when Constraint_Error =>
+            null; -- Ignore constraint errors
+         end;
+      end loop;
+   end Serial_Controller;
 
 end Driver;
