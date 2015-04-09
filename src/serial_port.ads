@@ -1,4 +1,8 @@
 package Serial_Port is
+   pragma Elaborate_Body;
+
+   Receive_Buffer_Size : constant Natural := 128; -- Number of bytes to buffer from RX line
+
    procedure Enable(Baud_Rate : in Natural);
 
    -- Read any characters that are available into the provided buffer, stopping when the buffer is
